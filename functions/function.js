@@ -10,8 +10,8 @@ async function getPost() {
 
 async function addPost(obj) {
     console.log(obj)
-    const data = await connection.execute('INSERT INTO posts(userId, postData, mainImg,likes) VALUES (?,?,?,?)',
-    [obj.body.userId, obj.body.postData, obj.body.mainImg, obj.body.likes]);
+    const data = await connection.execute('INSERT INTO posts(userId, postData,likes) VALUES (?,?,?)',
+    [obj.body.userId, obj.body.postData,obj.body.likes]);
     console.log(data[0])
     return data[0];
 }
@@ -19,7 +19,7 @@ async function Likes(id) {
     const data = await connection.execute('SELECT likes from posts where postId = ?', [id]);
     const result = await JSON.parse(JSON.stringify(data[0]));
     const likes = result[0].likes + 1;
-    if (likes === 1) {
+    if (likes === 2) {
         return likes;
     }
     const updQuery = 'UPDATE ?? SET ?? = ? WHERE ?? = ?';
