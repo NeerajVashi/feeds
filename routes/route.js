@@ -24,6 +24,7 @@ app.post('/postdata', async (req, res) => {
 app.post('/posttext', async (req, res) => {
     console.log('posttext', req.body);
     const [postData] = await Posts.addPostText(req);
+    console.log("end")
     res.json(postData);
 });
 
@@ -50,8 +51,28 @@ app.post('/comment', async(req, res) => {
     console.log(comments);
     res.json(comments);
 })
-app.delete('/comments/:id', async (req, res) => {
+app.delete('/deletePost/:id', async (req, res) => {
     const [result] = await Posts.delPost(req.params.id)
+
     res.json(result);
+})
+app.post('/addComments', async(req, res) => {
+    const comment = req.body;
+    console.log('comments', comment);
+    const [comments] = await Posts.addComment(comment);
+    res.json(comments);
+})
+app.get('/comments/:id', async(req, res) => {
+    const id = req.params.id;
+    console.log('post id', id);
+    const [comments] = await Posts.Comment(id);
+    res.json(comments);
+})
+app.post('/like/:id', async(req, res) => {
+    const postId = req.params.id;
+    const likes = req.body.likes;
+    const userId = req.body.userId;
+    const [posts] = await Posts.likes(likes, postId, userId)
+    res.json(posts)
 })
 module.exports = app;
