@@ -7,6 +7,20 @@ const Posts = require('../functions/function');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.get('/allPosts/:id', async (req, res) => {
+    const userId = req.params.id;
+    console.log('userId', userId)
+    const [posts] = await Posts.postsForUsers(userId);
+    res.json(posts);
+});
+
+app.get('/userPost/:id', async (req, res) => {
+    const userId = req.params.id;
+    const [posts] = await Posts.userPost(userId);
+    res.json(posts);
+})
+
 app.get('/postdata', async (req, res) => {
     const postData = await Posts.getPost();
     res.json(postData);
@@ -51,11 +65,34 @@ app.post('/comment', async(req, res) => {
     console.log(comments);
     res.json(comments);
 })
+// app.delete('/deletePost/:id', async (req, res) => {
+//     const [result] = await Posts.delPost(req.params.id)
+//     res.json(result);
+// })
 app.delete('/deletePost/:id', async (req, res) => {
-    const [result] = await Posts.delPost(req.params.id)
-
+    const Id = {
+        postId:req.params.id,
+        userId:req.body.userId
+    }
+    console.log('Id', Id);
+    const result = await Posts.deletePost(Id)
     res.json(result);
 })
+
+app.delete('/deleteHomePost', async (req, res) => {
+    console.log('inside delte home post');
+    const Id = req.body;
+    const [result] = await Posts.deleteHomePost(Id)
+    res.json(result);
+})
+
+app.delete('/deletePersonalPost', async (req, res) => {
+    const Id = req.body;
+    const [result] = await Posts.deletePersonalPost(Id)
+    res.json(result);
+})
+
+
 app.post('/addComments', async(req, res) => {
     const comment = req.body;
     console.log('comments', comment);
@@ -68,11 +105,17 @@ app.get('/comments/:id', async(req, res) => {
     const [comments] = await Posts.Comment(id);
     res.json(comments);
 })
-app.post('/like/:id', async(req, res) => {
-    const postId = req.params.id;
-    const likes = req.body.likes;
-    const userId = req.body.userId;
-    const [posts] = await Posts.likes(likes, postId, userId)
+app.put('/like', async(req, res) => {
+    const post = req.body;
+    console.log('post', post);
+    const [posts] = await Posts.likes(post)
     res.json(posts)
+})
+
+app.get('/postNotification/:id', async(req, res) => {
+    const id = req.params.id;
+    console.log('id', id);
+    const [posts] = await Posts.postNotification(id);
+    res.json(posts);
 })
 module.exports = app;
