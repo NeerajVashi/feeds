@@ -8,6 +8,10 @@ const Posts = require('../functions/function');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.get('/home', (req, res) => {
+    res.send('you are in home');
+})
+
 app.get('/allPosts/:id', async (req, res) => {
     const userId = req.params.id;
     console.log('userId', userId)
